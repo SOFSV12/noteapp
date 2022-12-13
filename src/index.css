@@ -119,6 +119,12 @@ textarea:focus {
   margin-bottom: 1.5em;
 }
 
+.heading-container {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
 .search input {
   border: none;
   background-color: rgb(233, 233, 233);
