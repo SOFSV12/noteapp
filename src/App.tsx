@@ -1,68 +1,96 @@
-import React from "react";
-import axios from "axios";
-import { nanoid } from "nanoid";
-import useAxios from "./hooks/useAxios";
-import Header from "./Components/Header";
-import Search from "./Components/Search";
-import NotesList from "./Components/NoteList";
-import LoadingSpinner from "./UI/LoadingSpinner";
+import { useState, useEffect } from "react";
+import Parent from "./Components/Parent";
 import Form from "./Components/common/Form";
-
-axios.defaults.baseURL = "https://react-http-4d9f4-default-rtdb.firebaseio.com";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { app } from "./firebase-config";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { notes, error, loading } = useAxios({
-    method: "get",
-    url: "/notes.json",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const [searchText, setSearchText] = React.useState("");
-  const [darkMode, setDarkMode] = React.useState<boolean>(false);
+  useEffect(() => {
+    let authToken = sessionStorage.getItem("Auth Token");
 
-  const handleToggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+    if (authToken) {
+      navigate("/notes");
+    }
+  }, []);
 
-  const addNoteHandler = async (text: string) => {
-    const date = new Date();
-    try {
-      const response = await axios.post("/notes.json", {
-        text: text,
-        id: nanoid(),
-        date: date.toLocaleDateString(),
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+  const handleAction = (id: number) => {
+    const authentication = getAuth(app);
+    if (id === 2) {
+      createUserWithEmailAndPassword(authentication, email, password)
+        .then((response: any) => {
+          sessionStorage.setItem(
+            "Auth Token",
+            response._tokenResponse.refreshToken,
+          );
+        })
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            toast.error("Email Already in Use");
+          }
+        });
+    }
+    if (id === 1) {
+      signInWithEmailAndPassword(authentication, email, password)
+        .then((response: any) => {
+          navigate("/notes");
+          sessionStorage.setItem(
+            "Auth Token",
+            response._tokenResponse.refreshToken,
+          );
+        })
+        .catch((error) => {
+          if (error.code === "auth/wrong-password") {
+            toast.error("Please check the Password");
+          }
+          if (error.code === "auth/user-not-found") {
+            toast.error("Please check the Email");
+          }
+        });
     }
   };
-
-  const deleteNoteHandler = (baseId: string) => {
-    try {
-      const response = axios.delete(`/notes/${baseId}.json`);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div className={`${darkMode && "dark-mode"}`}>
-      <Form />
-      <div className="container">
-        {loading && <LoadingSpinner />}
-        {notes.length === 0 && <h4>No entries found, Add a Note</h4>}
-        {error && <h1>Something went wrong</h1>}
-        <Header handleToggleDarkMode={handleToggleDarkMode} />
-        <Search handleSearchNote={setSearchText} />
-        <NotesList
-          notes={notes.filter((note) =>
-            note.text.toLowerCase().includes(searchText),
-          )}
-          onAddNote={addNoteHandler}
-          onDeleteNote={deleteNoteHandler}
+    <div>
+      <ToastContainer />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Form
+              title="Login"
+              setEmail={setEmail}
+              setPassword={setPassword}
+              handleAction={() => handleAction(1)}
+              link
+            />
+          }
         />
-      </div>
+        <Route
+          path="/register"
+          element={
+            <Form
+              title="Sign up"
+              setEmail={setEmail}
+              setPassword={setPassword}
+              handleAction={() => {
+                handleAction(2);
+                navigate("/notes");
+              }}
+            />
+          }
+        />
+        <Route path="/notes" element={<Parent />} />
+      </Routes>
     </div>
   );
 }

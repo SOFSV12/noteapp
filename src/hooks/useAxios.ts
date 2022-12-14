@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import axios from "axios";
 import { userNote } from "../models/models";
 
@@ -15,7 +15,7 @@ const useAxios = ({ method, url, data }: axiosParams) => {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  const fetchNotes = React.useCallback(async () => {
+  const fetchNotes = async () => {
     await axios({ method, url, data })
       .then((res) => {
         console.log(res.data);
@@ -39,11 +39,11 @@ const useAxios = ({ method, url, data }: axiosParams) => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
   React.useEffect(() => {
     fetchNotes();
-  }, [fetchNotes, notes, url]);
+  }, [fetchNotes, notes]);
 
   return { notes, error, loading };
 };
