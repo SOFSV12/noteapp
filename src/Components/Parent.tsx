@@ -64,7 +64,9 @@ const Parent = () => {
       <div className="container">
         {loading && <LoadingSpinner />}
         {notes.length === 0 && <h4>No entries found, Add a Note</h4>}
-        {error && <h1>Something went wrong</h1>}
+        {error && (
+          <h1 className={`${darkMode && "dark-mode"}`}>Something went wrong</h1>
+        )}
         <Header handleToggleDarkMode={handleToggleDarkMode} />
         <Search handleSearchNote={setSearchText} />
         <NotesList
