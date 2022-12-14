@@ -119,6 +119,19 @@ textarea:focus {
   margin-bottom: 1.5em;
 }
 
+.heading-container {
+  display: flex;
+  flex-direction: column;
+  justify-items: end;
+  align-items: center;
+}
+
+.layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .search input {
   border: none;
   background-color: rgb(233, 233, 233);
@@ -127,6 +140,10 @@ textarea:focus {
 
 .search input:focus {
   outline: none;
+}
+
+.buttons :first-child {
+  margin-right: 10px;
 }
 
 .spinner {

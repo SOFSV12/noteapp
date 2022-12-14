@@ -15,11 +15,14 @@
     "@types/react-dom": "^18.0.6",
     "axios": "^0.27.2",
     "eslint-plugin-markdown": "^3.0.0",
+    "firebase": "^9.15.0",
     "nanoid": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
+    "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
+    "react-toastify": "^9.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
