@@ -63,10 +63,12 @@ const Parent = () => {
     <div className={`${darkMode && "dark-mode"}`}>
       <div className="container">
         {loading && <LoadingSpinner />}
-        {notes.length === 0 && <h4>No entries found, Add a Note</h4>}
-        {error && (
-          <h1 className={`${darkMode && "info"}`}>Something went wrong</h1>
+        {notes.length === 0 && (
+          <h4 className={`${darkMode && "info"}`}>
+            No entries found, Add a Note
+          </h4>
         )}
+        {error && <h1>Something went wrong</h1>}
         <Header handleToggleDarkMode={handleToggleDarkMode} />
         <Search handleSearchNote={setSearchText} />
         <NotesList
