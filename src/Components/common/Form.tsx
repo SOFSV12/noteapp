@@ -9,6 +9,7 @@ interface BasicTextFieldsProps {
   setPassword: Function;
   handleAction: any;
   link?: boolean;
+  login?: boolean;
 }
 
 const BasicTextFields: React.FC<BasicTextFieldsProps> = ({
@@ -17,6 +18,7 @@ const BasicTextFields: React.FC<BasicTextFieldsProps> = ({
   setPassword,
   handleAction,
   link,
+  login,
 }) => {
   return (
     <div className="layout">
@@ -48,7 +50,8 @@ const BasicTextFields: React.FC<BasicTextFieldsProps> = ({
           </Stack>
         </Box>
         <Button title={title} handleClick={handleAction} />
-        {link && <Link to={"/register"}>Sign UP</Link>}
+        {link && <Link to={"/register"}>Sign Up</Link>}
+        {login && <Link to={"/"}>Sign In</Link>}
       </div>
     </div>
   );

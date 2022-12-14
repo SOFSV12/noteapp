@@ -86,6 +86,7 @@ function App() {
                 handleAction(2);
                 navigate("/notes");
               }}
+              login
             />
           }
         />
